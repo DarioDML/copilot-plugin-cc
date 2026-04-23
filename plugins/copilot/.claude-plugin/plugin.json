@@ -1,0 +1,7 @@
+{
+  "name": "copilot",
+  "version": "0.1.0",
+  "description": "Use GitHub Copilot from Claude Code for code reviews, adversarial reviews, and task delegation.",
+  "author": "dario-dev",
+  "license": "Apache-2.0"
+}
