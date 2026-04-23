@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Claude Code plugin that delegates code reviews and tasks to GitHub Copilot CLI",
   "private": true,
+  "author": "DarioDML",
   "license": "Apache-2.0",
   "type": "module",
   "engines": {

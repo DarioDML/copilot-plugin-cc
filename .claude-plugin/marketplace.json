@@ -1,0 +1,18 @@
+{
+  "name": "copilot-plugin-cc",
+  "owner": {
+    "name": "DarioDML"
+  },
+  "plugins": [
+    {
+      "name": "copilot",
+      "description": "Use GitHub Copilot from Claude Code for code reviews, adversarial reviews, and task delegation.",
+      "version": "0.1.0",
+      "author": {
+        "name": "DarioDML"
+      },
+      "source": "./plugins/copilot",
+      "category": "productivity"
+    }
+  ]
+}

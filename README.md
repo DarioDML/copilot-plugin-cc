@@ -16,16 +16,18 @@ A **Claude Code plugin** that lets you use **GitHub Copilot CLI** from within Cl
 
 ## Installation
 
-From Claude Code, install the plugin:
+To install the plugin from Claude Code, first add the repository as a marketplace, then install the `copilot` plugin:
 
-```
-/plugin install copilot@https://github.com/yourusername/copilot-plugin-cc
+```bash
+claude plugin marketplace add https://github.com/DarioDML/copilot-plugin-cc
+claude plugin install copilot
 ```
 
 Or install from a local checkout:
 
-```
-/plugin install copilot@./path/to/copilot-plugin-cc
+```bash
+claude plugin marketplace add ./path/to/copilot-plugin-cc
+claude plugin install copilot
 ```
 
 ## Commands
