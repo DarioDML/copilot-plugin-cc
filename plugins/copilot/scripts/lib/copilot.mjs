@@ -62,14 +62,26 @@ export function getCopilotAuthStatus(cwd) {
  */
 export function runCopilotPrompt(cwd, prompt, options = {}) {
   return new Promise((resolve, reject) => {
-    const args = ["-p", prompt];
-
-    const child = spawn(COPILOT_BIN, args, {
-      cwd,
-      env: { ...process.env },
-      stdio: ["ignore", "pipe", "pipe"],
-      detached: process.platform !== "win32",
-    });
+    let child;
+    if (process.platform === "win32") {
+      const escapedPrompt = JSON.stringify(prompt);
+      child = spawn(`${COPILOT_BIN} -p ${escapedPrompt} --allow-all-tools`, {
+        cwd,
+        env: { ...process.env },
+        stdio: ["ignore", "pipe", "pipe"],
+        detached: false,
+        shell: true,
+      });
+    } else {
+      const args = ["-p", prompt, "--allow-all-tools"];
+      child = spawn(COPILOT_BIN, args, {
+        cwd,
+        env: { ...process.env },
+        stdio: ["ignore", "pipe", "pipe"],
+        detached: true,
+        shell: false,
+      });
+    }
 
     let stdout = "";
     let stderr = "";

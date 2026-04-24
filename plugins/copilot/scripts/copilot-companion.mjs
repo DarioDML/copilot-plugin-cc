@@ -166,10 +166,36 @@ async function handleTaskWorker(argv) {
   const cwd = resolveCwd(options);
   const workspaceRoot = resolveWorkspaceRoot(cwd);
   upsertJob(workspaceRoot, { id: options["job-id"], status: "running" });
-  const result = await runCopilotTask(cwd, options.prompt);
-  const status = result.status === 0 ? "completed" : "failed";
-  upsertJob(workspaceRoot, { id: options["job-id"], status, completedAt: nowIso() });
-  writeJobFile(workspaceRoot, options["job-id"], { status, output: result.output, stderr: result.stderr });
+  try {
+    let currentOutput = "";
+    let currentStderr = "";
+    let lastWrite = 0;
+    
+    const result = await runCopilotTask(cwd, options.prompt, {
+      onProgress: (chunk) => {
+        if (chunk.type === "stdout") currentOutput += chunk.text;
+        if (chunk.type === "stderr") currentStderr += chunk.text;
+        
+        const now = Date.now();
+        if (now - lastWrite > 500) {
+          lastWrite = now;
+          writeJobFile(workspaceRoot, options["job-id"], { 
+            status: "running", 
+            output: currentOutput, 
+            stderr: currentStderr 
+          });
+        }
+      }
+    });
+    
+    const status = result.status === 0 ? "completed" : "failed";
+    upsertJob(workspaceRoot, { id: options["job-id"], status, completedAt: nowIso() });
+    writeJobFile(workspaceRoot, options["job-id"], { status, output: result.output, stderr: result.stderr });
+  } catch (err) {
+    const status = "failed";
+    upsertJob(workspaceRoot, { id: options["job-id"], status, completedAt: nowIso(), errorMessage: err.message });
+    writeJobFile(workspaceRoot, options["job-id"], { status, stderr: err.message, output: "" });
+  }
 }
 
 // ── status ──────────────────────────────────────────────────────────────────

@@ -2,7 +2,7 @@
  * Process management utilities.
  */
 
-import { execFileSync } from "node:child_process";
+import { execSync } from "node:child_process";
 
 /**
  * Check whether a binary is available on the system PATH.
@@ -14,7 +14,7 @@ import { execFileSync } from "node:child_process";
  */
 export function binaryAvailable(name, args = ["--version"], opts = {}) {
   try {
-    const output = execFileSync(name, args, {
+    const output = execSync(`${name} ${args.join(" ")}`, {
       cwd: opts.cwd ?? process.cwd(),
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
